@@ -56,6 +56,16 @@ client.connect(err => {
 
     });
 
+    app.post('/isAdmin', (req, res) => {
+        const email = req.body.email;
+        courseCollection.find({email: email})
+        .toArray((err, admins) => {
+            res.send(admins.length > 0);
+        })
+
+    })
+
+
     app.delete("/delete/:id", (req, res) =>{
         const id = ObjectID(req.params.id);
         console.log("Deleted", id)
