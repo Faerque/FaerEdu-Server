@@ -25,15 +25,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
     console.log("Connection Error", err);
 
-    // const adminCollection = client.db("FaerEdu").collection("adminList");
-    // app.post("/addAdmin", (req, res) =>{
-    //     const addAdmin = req.body;
-    //     console.log(addAdmin)
-    //     adminCollection.insertOne(addAdmin)
-    //     .then(result =>{
-    //         res.send(result.insertedCount > 0)
-    //     })
-    // })
+   
 
     
     const courseCollection = client.db("FaerEdu").collection("courses");
@@ -99,7 +91,7 @@ client.connect(err => {
         console.log("Enrolled Course Deleted", id)
         courseCartCollection
         .findOneAndDelete({_id: id})
-        .then((document) => res.send(document.deleteCount > 0) )
+        .then((item) => res.send(item.deleteCount > 0) )
     })
 
 
@@ -110,6 +102,19 @@ client.connect(err => {
           res.send(items);
         })
       })
+
+      app.post('/update/:id', (req, res)=>{
+        const id = ObjectID(req.params.id)
+        const data = req.body;
+        courseCartCollection.findOneAndUpdate({_id:id}, {$set :{status:data.status}})
+        .then(result => {
+            console.log(result)
+            res.send(result);
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    })
 
  
     const reviewCollection = client.db("FaerEdu").collection("reviewCollection");
